@@ -12,4 +12,4 @@ h:neg hopen `::5000;                                                            
 .z.ts:{h (`.u.upd;`Events;getEvent[]);}                                                              / setup the timer function to send feeds
 
 0N!"Running feedAPIs";
-system "\t 60000";                                                                                   / timer set for 60 secs 
+system "t 60000";                                                                                   / timer set for 60 secs 
