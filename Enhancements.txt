@@ -1,0 +1,25 @@
+1. Schedule/Execute Dependant jobs:
+Its possible that a few jobs have certain others as pre-requisite before they can be executed. In this case, in addition to our already existing job modes:
+  once       : jobs that are auto-executed and need to be run only once
+  repeat     : jobs that are auto-executed and need to be run in every "fixed interval"
+  `          : jobs that are added to scheduler but are not auto-executed. They are triggered using .events.execEvent[jobID]
+  we add a 4th;
+  dependant  : jobs that depend on other jobIDs to complete successfully before they can be executed. 
+
+ - Additionally we will add a new column to our Events table called "prerequisites". It would take an integer list with the required jobIDs for the dependant jobs.
+ - We will add a check to the .u.upd function on the eventsTP to filter out jobs with mode as `dependant and NULL prerequisites. 
+ - Prerequisites for other job modes would be null lists. 
+ - .u.upd returns the jobIDs back on the function call so our current design enables our client to add the "independant" jobs first.
+ - Finally we will control the execution of such jobs on .events.run by checking if "each" of the prerequisites were marked as isCompleted
+
+2. eventsHDB:
+With the current minimalist design HDB was kept out of scope since it doesn;t add much value. But there are interesting ways to improve our scheduler to make use of hdb
+Add a Column persist (boolean) to the Events table to enable certain jobs to be loaded the subsequent days at startup from hdb until the persist flag is marked 0b
+
+3. load balancing:
+ Add a load balancer and gateway to subscribe to updates on the EventsRT and pick up tasks. This would ensure that EventsRT is never blocked with strenous jobs/queries.
+
+4. `result in events.mode
+Enable a mode "result" in addition to the 4 discussed in section 1 where the user is able to pass a match/convergence value for the outcome of the event. 
+If the output of the execution matches this value, the job is marked as completed, else its executed until that value is achieved. 
+This would help in service discovery failure scenarios where a job can be marked as completed even though no result was achieved due to the service being busy.

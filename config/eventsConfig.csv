@@ -1,0 +1,5 @@
+jobType,command,mode,interval
+trigger,.events.exe[`::5005;(`.api.tc.loadTradingConfig;::)],once,
+trigger,.events.exe[`::5005;(`.api.tc.loadPriSecMapping;::)],once,
+trigger,.events.exe[`::5005;(`.api.tc.savePriSecMapping;::)],repeat,01:00:00
+trigger,.events.exe[`::5005;(`.api.tc.saveTradingConfig;::)],repeat,01:00:00
