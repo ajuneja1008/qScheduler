@@ -29,7 +29,7 @@ Deployment Steps (Windows):
 
 1. Download the package and place it in the desired deployment directory. 
 2. Open qScheduler/config/config.bat and edit QHOME(source of q binaries) and BASE_DIR(deployment directory for the qScheduler)
-3. cd to qScheduler home directory and run ./bin/startqScheduler.bat. This should open 5 windows sequentially(tradeConfigRT, eventsTP, eventsRT and 2 feeds)
+3. Go to qScheduler home directory > bin > double-click runqScheduler.bat. This should open 5 windows sequentially(tradeConfigRT, eventsTP, eventsRT and 2 feeds)
 ** Note: All process assume their root directory as <your>/<deployment>/<dir>/qScheduler **
 4. eventsRT would start looking for jobs to run and print "No jobs to run" if there aren't any.
    Meanwhile, feeds (after 70 secs) will start sending more jobs to the scheduler. Run .u.i to evidence the count of incoming messages.
