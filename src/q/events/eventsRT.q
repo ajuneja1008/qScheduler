@@ -56,16 +56,16 @@ system "c 250 2500";                                                  / increasi
 .events.exe:{h:hopen x; res:h y; hclose h;res}
 
 / protected evaluation for all Events. Print Error whenever execution fails. 
-.events.execEvent:{[ids] {[cmd] @[value;cmd;{"Failed to execute job. Error:",x}]} each Events[([]jobID:(),ids);`command]}
+.events.execEvent:{[ids] {[cmd] @[value;cmd;{enlist["Failed to execute job. Error:",x]}]} each Events[([]jobID:(),ids);`command]}
 
 /Run all jobs past their exec time, mark them as completed(schedule next in case of repeat) and update TP  
 .events.run:{
  ids:exec distinct jobID from Events where execTime <= .z.P, not isCompleted;                       
  if[not count ids;:enlist[.Q.s1[.z.P]," No jobs to run"]];                                          / early exit if no jobs found
- result:raze .events.execEvent ids;                                                                 / execute all ids
+ result: .events.execEvent ids;                                                                     / execute all ids
  t: update isCompleted:1b from select from Events where jobID in ids, mode=`once;                   / isCompleted:1b for once jobs
  t,: update execTime: .z.P + interval from select from Events where jobID in ids, mode=`repeat;     / new execTime for repeat jobs
- .events.exe[`::5000;(`.u.updComplete;`Events;0!t)];                                                  / send update to tickerplant
+ .events.exe[`::5000;(`.u.updComplete;`Events;0!t)];                                                / send update to tickerplant
  result}
 
 .z.ts:{delete from `Events where isCompleted; 0N!.events.run[]}
